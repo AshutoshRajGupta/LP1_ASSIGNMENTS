@@ -1,97 +1,3 @@
-import java.util.Arrays;
-import java.util.Scanner;
-
-public class Main {
-
-    public static void main(String[] args) {
-
-        System.out.println("*** Priority Scheduling ***");
-
-        System.out.print("Enter Number of Process: ");
-        Scanner sc = new Scanner(System.in);
-        int numberOfProcess = sc.nextInt();
-        String process[] = new String[numberOfProcess];
-
-        int p = 1;
-        for (int i = 0; i < numberOfProcess; i++) {
-            process[i] = "P" + p;
-            p++;
-        }
-
-        System.out.println(Arrays.toString(process));
-
-        System.out.print("Enter Burst Time for " + numberOfProcess + " process: ");
-
-        int burstTime[] = new int[numberOfProcess];
-        for (int i = 0; i < numberOfProcess; i++) {
-            burstTime[i] = sc.nextInt();
-        }
-
-        System.out.println(Arrays.toString(burstTime));
-
-        System.out.print("Enter Priority for " + numberOfProcess + " process: ");
-
-        int priority[] = new int[numberOfProcess];
-        for (int i = 0; i < numberOfProcess; i++) {
-            priority[i] = sc.nextInt();
-        }
-
-        System.out.println(Arrays.toString(priority));
-
-// Sorting process & burst time by priority
-int temp;
-String temp2;
-for (int i = 0; i < numberOfProcess - 1; i++) {
-      for (int j = 0; j < numberOfProcess - 1; j++) {
-            if (priority[j] > priority[j + 1]) {
-                   temp = priority[j];
-                    priority[j] = priority[j + 1];
-                    priority[j + 1] = temp;
-
-                    temp = burstTime[j];
-                    burstTime[j] = burstTime[j + 1];
-                    burstTime[j + 1] = temp;
-
-                    temp2 = process[j];
-                    process[j] = process[j + 1];
-                    process[j + 1] = temp2;
-
-                }
-            }
-        }
-
-        int TAT[] = new int[numberOfProcess + 1];
-        int waitingTime[] = new int[numberOfProcess + 1];
-
-// Calculating Waiting Time & Turn Around Time
-        for (int i = 0; i < numberOfProcess; i++) {
-            TAT[i] = burstTime[i] + waitingTime[i];
-            waitingTime[i + 1] = TAT[i];
-        }
-
-        int totalWT = 0;
-        int totalTAT = 0;
-        double avgWT;
-        double avgTAT;
-
-        System.out.println("Process     BT      WT        TAT");
-        for (int i = 0; i < numberOfProcess; i++) {
-
-            System.out.println(process[i] + "          " + burstTime[i] + "       " + waitingTime[i] + "         " + (TAT[i]));
-            totalTAT += (waitingTime[i] + burstTime[i]);
-            totalWT += waitingTime[i];
-
-        }
-
-        avgWT = totalWT / (double) numberOfProcess;
-        avgTAT = totalTAT / (double) numberOfProcess;
-
-        System.out.println("\n Average Wating Time: " + avgWT);
-        System.out.println(" Average Turn Around Time: " + avgTAT);
-
-    }
-
-}
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
     import java.util.Scanner;
@@ -209,3 +115,74 @@ Process   Burst Time   Wait Time   Turn Around Time   Priority
  Average Turn Around Time : 11
 
 ************************/
+
+------------------------------------------------------------------------------------------------------------------------
+    
+import java.util.Scanner;
+
+public class Priority {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the number of processes:");
+        int n = sc.nextInt();
+        int i, pos=0, temp;
+
+        System.out.println("Enter the burst times:");
+        int p[] = new int[n];
+        int bt[] = new int[n]; //burst time
+        int pt[] = new int[n]; //priority time
+        int wt[] = new int[n]; //waiting time
+        int tat[] = new int[n]; //turn-around time
+
+        for (i = 0; i < n; i++) {
+            p[i] = i + 1;
+            bt[i] = sc.nextInt();
+        }
+
+        System.out.println("Enter priority time:");
+        for (i = 0; i < n; i++) {
+            pt[i] = sc.nextInt();
+        }
+
+        for (i = 0; i < n; i++) {
+            pos = i;
+            for (int j = i + 1; j < n; j++) {
+                if (pt[j] < pt[pos]) {
+                    pos = j;
+                }
+            }
+            temp = pt[pos];
+            pt[pos] = pt[i];
+            pt[i] = temp;
+
+            temp = p[pos];
+            p[pos] = p[i];
+            p[i] = temp;
+
+            temp = bt[pos];
+            bt[pos] = bt[i];
+            bt[i] = temp;
+        }
+
+        wt[0] = 0;
+
+        /*for(i=1;i<n;i++)
+        {
+            wt[i]=0;
+            for(int j=0;j<i;j++)
+                wt[i]+=bt[j];
+        }*/
+        for (i = 1; i < n; i++) {
+            wt[i] = wt[i - 1] + bt[i - 1];
+        }
+
+        System.out.println("Process\tBT\tpriority\twaiting time\tTAT");
+
+        for (i = 0; i < n; i++) {
+            tat[i] = bt[i] + wt[i];
+            System.out.println(p[i] + "\t" + bt[i] + "\t" + pt[i] + "\t\t" + wt[i] + "\t\t" + tat[i]);
+        }
+
+    }
+}
