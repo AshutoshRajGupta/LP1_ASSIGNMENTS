@@ -1,54 +1,41 @@
-public class Main
-{
-	static void worstFit(int blockSize[], int m, int processSize[],int n)
-	{
-		int allocation[] = new int[n];
-		for (int i = 0; i < allocation.length; i++)
-			allocation[i] = -1;
+import java.util.Scanner;
+public class worstfit{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter number of partitions");
+        int npart = sc.nextInt();
+        System.out.println("Enter size of partitions: ");
+        int part[] = new int[npart];
+        for(int i =0;i<npart;i++){
+            part[i] = sc.nextInt();
+        }
 
-		for (int i=0; i<n; i++)
-		{
-			int wstIdx = -1;
-			
-			for (int j=0; j<m; j++)
-			{
-				if (blockSize[j] >= processSize[i])
-				{
-					if (wstIdx == -1)
-						wstIdx = j;
-					else if (blockSize[wstIdx] < blockSize[j])
-						wstIdx = j;
-				}
-			}
-	
-			if (wstIdx != -1)
-			{
-				allocation[i] = wstIdx;
-				blockSize[wstIdx] -= processSize[i];
-			}
-		}
-	
-		System.out.println("\nProcess No.\tProcess Size\tBlock no.");
-		for (int i = 0; i < n; i++)
-		{
-			System.out.print(" " + (i+1) + "\t\t" + processSize[i] + "\t\t");
-			if (allocation[i] != -1)
-				System.out.print(allocation[i] + 1);
-			else
-				System.out.print("Not Allocated");
-			System.out.println();
-		}
-	}
-	
+        System.out.println("Enter number of processes");
+        int nproc = sc.nextInt();
+        System.out.print("Enter size of processes: ");
+        int proc[] = new int[nproc];
+        for(int i =0;i<nproc;i++){
+            proc[i] = sc.nextInt();
+        }
 
-    public static void main(String[] args)
-	{
-		int blockSize[] = {100, 500, 200, 300, 600};
-		int processSize[] = {212, 417, 112, 426};
-		int m = blockSize.length;
-		int n = processSize.length;
-		
-		worstFit(blockSize, m, processSize, n);
-	}
+        int filled[] = new int[npart];
+
+        for(int i =0;i<nproc;i++){
+            int k = -1;
+            for(int j = 0;j<npart;j++){
+                if(part[j]>=proc[i]){
+                    if((k==-1||part[j]>part[k])&&filled[j]!=1){
+                        k = j;
+                    }
+                }
+            }
+            if(k!=-1){
+                filled[k] = 1;
+                System.out.println("Best Fit for process "+proc[i]+" is "+part[k]+" and Hole of "+(part[k]-proc[i])+" is created.");
+            }
+            else{
+                System.out.println("Best fit not found");
+            }
+        }
+    }
 }
-
