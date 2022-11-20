@@ -1,40 +1,41 @@
 import java.util.Scanner;
-class Main{
-    public static void main(String args[]){
+public class best_fit{
+    public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter no. of partitions: ");
+        System.out.println("Enter number of partitions");
         int npart = sc.nextInt();
-        System.out.print("Enter size of partitions: ");
+        System.out.println("Enter size of partitions: ");
         int part[] = new int[npart];
-        for(int i=0;i<npart;i++)
+        for(int i =0;i<npart;i++){
             part[i] = sc.nextInt();
-        System.out.print("Enter no. of processes: ");
-        int npro = sc.nextInt();
+        }
+
+        System.out.println("Enter number of processes");
+        int nproc = sc.nextInt();
         System.out.print("Enter size of processes: ");
-        int pro[] = new int[npro];
-        for(int i=0;i<npro;i++)
-            pro[i] = sc.nextInt();
-       
+        int proc[] = new int[nproc];
+        for(int i =0;i<nproc;i++){
+            proc[i] = sc.nextInt();
+        }
+
         int filled[] = new int[npart];
-        int diff[] = new int[npart];
-       
-        for(int i=0;i<npro;i++){
-            for(int j=0;j<npart;j++){
-                diff[j] = part[j]-pro[i];
-                if(filled[j]==1)
-                    diff[j]=-1;
-            }
-            int min=32767,k=0;
-            for(int j=0;j<npart;j++){
-                if(diff[j]<min&&diff[j]>=0){
-                    min=diff[j];
-                    k=j;
+
+        for(int i =0;i<nproc;i++){
+            int k = -1;
+            for(int j = 0;j<npart;j++){
+                if(part[j]>=proc[i]){
+                    if((k==-1||part[j]<part[k])&&filled[j]!=1){
+                        k = j;
+                    }
                 }
             }
-            filled[k]=1;
-           
-            if(diff[k]<0) System.out.println("Best Fit not found for process "+(i+1)+".");
-            else System.out.println("Best Fit for process "+(i+1)+" is "+part[k]+" and Hole of "+diff[k]+" is created.");
+            if(k!=-1){
+                filled[k] = 1;
+                System.out.println("Best Fit for process "+proc[i]+" is "+part[k]+" and Hole of "+(part[k]-proc[i])+" is created.");
+            }
+            else{
+                System.out.println("Best fit not found");
+            }
         }
     }
 }
